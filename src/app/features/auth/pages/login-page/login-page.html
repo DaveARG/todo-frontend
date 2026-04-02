@@ -1,0 +1,270 @@
+<div class="login-layout min-h-screen flex bg-background overflow-hidden">
+  <!-- ── Panel decorativo izquierdo ── -->
+  <aside
+    class="hidden lg:flex lg:w-[52%] xl:w-[55%] relative flex-col items-center justify-center overflow-hidden"
+    aria-hidden="true"
+  >
+    <!-- Fondo gradiente principal -->
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary to-primary-light"
+    ></div>
+
+    <!-- Blob superior derecho -->
+    <div
+      class="absolute top-[-18%] right-[-14%] w-[500px] h-[500px] rounded-full bg-white/[0.06] blur-[2px]"
+    ></div>
+    <!-- Blob inferior izquierdo -->
+    <div
+      class="absolute bottom-[-22%] left-[-12%] w-[560px] h-[560px] rounded-full bg-white/[0.04]"
+    ></div>
+    <!-- Acento verde / accent -->
+    <div
+      class="absolute top-[28%] right-[-6%] w-[240px] h-[240px] rounded-full bg-accent/[0.14] blur-sm"
+    ></div>
+    <!-- Círculo mediano secundario -->
+    <div
+      class="absolute top-[62%] left-[4%] w-[150px] h-[150px] rounded-full bg-white/[0.07]"
+    ></div>
+    <!-- Píldora decorativa superior izquierda -->
+    <div
+      class="absolute top-[8%] left-[6%] w-[80px] h-[80px] rounded-full border-[1.5px] border-white/[0.12]"
+    ></div>
+
+    <!-- Contenido centrado del panel -->
+    <div class="relative z-10 flex flex-col items-center gap-10 px-14 text-center">
+      <!-- Logo / Icono principal -->
+      <div class="flex flex-col items-center gap-5">
+        <!-- Anillo exterior + cuadrado con icono -->
+        <div class="relative flex items-center justify-center">
+          <!-- Anillo decorativo exterior -->
+          <div
+            class="absolute w-[120px] h-[120px] rounded-[36px] border-[1.5px] border-white/[0.15] rotate-6"
+          ></div>
+          <!-- Card del icono -->
+          <div
+            class="w-24 h-24 rounded-[28px] bg-white/[0.15] backdrop-blur-sm border border-white/[0.25] flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.22)]"
+          >
+            <mat-icon class="!text-[52px] !w-[52px] !h-[52px] !text-white">check_circle</mat-icon>
+          </div>
+          <!-- Badge de verificación verde -->
+          <div
+            class="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-accent border-2 border-white/[0.3] flex items-center justify-center shadow-[0_2px_8px_rgba(6,214,160,0.4)]"
+          >
+            <mat-icon class="!text-[16px] !w-4 !h-4 !text-white">verified</mat-icon>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <h1 class="text-4xl xl:text-5xl font-bold text-white tracking-tight m-0 leading-tight">
+            Todo App
+          </h1>
+          <p class="text-base xl:text-lg text-white/[0.72] m-0 font-medium leading-relaxed">
+            Gestiona tus tareas de forma sencilla
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature cards flotantes -->
+      <div class="flex flex-col gap-3 w-full max-w-[340px]">
+        <div
+          class="group flex items-center gap-4 bg-white/[0.09] backdrop-blur-sm border border-white/[0.14] rounded-xl px-5 py-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.13] hover:border-white/[0.22]"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-accent/[0.22] border border-accent/[0.3] flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
+          >
+            <mat-icon class="!text-[20px] !w-5 !h-5 text-accent-light">task_alt</mat-icon>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <span class="text-sm font-semibold text-white">Organiza tus proyectos</span>
+            <span class="text-xs text-white/[0.58]">Prioridades, fechas y seguimiento</span>
+          </div>
+        </div>
+
+        <div
+          class="group flex items-center gap-4 bg-white/[0.09] backdrop-blur-sm border border-white/[0.14] rounded-xl px-5 py-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.13] hover:border-white/[0.22]"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-warning/[0.18] border border-warning/[0.28] flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
+          >
+            <mat-icon class="!text-[20px] !w-5 !h-5 text-warning">schedule</mat-icon>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <span class="text-sm font-semibold text-white">Controla tus plazos</span>
+            <span class="text-xs text-white/[0.58]">Vencimientos y alertas inteligentes</span>
+          </div>
+        </div>
+
+        <div
+          class="group flex items-center gap-4 bg-white/[0.09] backdrop-blur-sm border border-white/[0.14] rounded-xl px-5 py-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.13] hover:border-white/[0.22]"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-white/[0.15] border border-white/[0.2] flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
+          >
+            <mat-icon class="!text-[20px] !w-5 !h-5 text-white/[0.9]">insights</mat-icon>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <span class="text-sm font-semibold text-white">Mide tu progreso</span>
+            <span class="text-xs text-white/[0.58]">Estadísticas y gráficos en tiempo real</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="flex items-center gap-6 pt-2">
+        <div class="flex flex-col items-center gap-0.5">
+          <span class="text-2xl font-bold text-white">100%</span>
+          <span class="text-[11px] text-white/[0.55] uppercase tracking-wider">Gratuito</span>
+        </div>
+        <div class="w-px h-8 bg-white/[0.15]"></div>
+        <div class="flex flex-col items-center gap-0.5">
+          <span class="text-2xl font-bold text-white">∞</span>
+          <span class="text-[11px] text-white/[0.55] uppercase tracking-wider">Tareas</span>
+        </div>
+        <div class="w-px h-8 bg-white/[0.15]"></div>
+        <div class="flex flex-col items-center gap-0.5">
+          <span class="text-2xl font-bold text-white">24/7</span>
+          <span class="text-[11px] text-white/[0.55] uppercase tracking-wider">Disponible</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Patrón de puntos — esquina inferior derecha -->
+    <div class="absolute bottom-8 right-8 opacity-[0.18]">
+      <svg
+        width="96"
+        height="96"
+        viewBox="0 0 96 96"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        @for (row of dotRows; track row) {
+          @for (col of dotCols; track col) {
+            <circle [attr.cx]="col * 16 + 8" [attr.cy]="row * 16 + 8" r="2.5" fill="white" />
+          }
+        }
+      </svg>
+    </div>
+
+    <!-- Patrón de puntos — esquina superior izquierda (espejado) -->
+    <div class="absolute top-8 left-8 opacity-[0.1]">
+      <svg
+        width="64"
+        height="64"
+        viewBox="0 0 64 64"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        @for (row of dotRowsSmall; track row) {
+          @for (col of dotColsSmall; track col) {
+            <circle [attr.cx]="col * 16 + 8" [attr.cy]="row * 16 + 8" r="2" fill="white" />
+          }
+        }
+      </svg>
+    </div>
+
+    <!-- Curva de transición hacia el panel derecho -->
+    <div class="absolute right-0 top-0 h-full w-10 overflow-hidden pointer-events-none">
+      <svg
+        class="absolute right-0 top-0 h-full"
+        width="40"
+        viewBox="0 0 40 800"
+        preserveAspectRatio="none"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path d="M40 0 Q0 400 40 800 L40 0Z" fill="rgb(240, 242, 247)" />
+      </svg>
+    </div>
+  </aside>
+
+  <!-- ── Panel derecho: formulario de acceso ── -->
+  <main
+    class="flex-1 flex flex-col items-center justify-center px-6 py-12 min-h-screen lg:px-12 xl:px-16 relative"
+  >
+    <!-- Blob decorativo de fondo en el panel derecho -->
+    <div
+      class="absolute top-0 right-0 w-64 h-64 rounded-full bg-primary/[0.035] blur-3xl pointer-events-none"
+      aria-hidden="true"
+    ></div>
+    <div
+      class="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-accent/[0.04] blur-3xl pointer-events-none"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Header móvil: logo compacto visible solo en pequeños -->
+    <div class="flex items-center gap-3 mb-10 lg:hidden" aria-hidden="true">
+      <div
+        class="w-10 h-10 rounded-md bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center shadow-[0_4px_14px_rgba(108,99,255,0.4)]"
+      >
+        <mat-icon class="!text-[22px] !w-[22px] !h-[22px] !text-white">check_circle</mat-icon>
+      </div>
+      <span class="text-xl font-bold text-on-surface">Todo App</span>
+    </div>
+
+    <!-- Contenedor del formulario -->
+    <div class="w-full max-w-[420px] flex flex-col gap-7">
+      <!-- Encabezado del formulario -->
+      <div class="flex flex-col gap-3">
+        <!-- Badge de seguridad -->
+        <div
+          class="inline-flex items-center gap-1.5 self-start px-3 py-1 bg-accent/[0.08] border border-accent/[0.2] rounded-pill"
+        >
+          <mat-icon class="!text-[13px] !w-[13px] !h-[13px] text-accent" aria-hidden="true"
+            >shield</mat-icon
+          >
+          <span class="text-[11px] font-semibold text-accent uppercase tracking-wider"
+            >Acceso seguro</span
+          >
+        </div>
+        <h2 class="text-2xl font-bold text-on-surface m-0 leading-tight">Bienvenido de vuelta</h2>
+        <p class="text-sm text-on-surface-secondary m-0 leading-relaxed">
+          Ingresa tu correo para acceder a tus tareas o crear una cuenta nueva.
+        </p>
+      </div>
+
+      <!-- Card del formulario con borde superior de acento -->
+      <div
+        class="relative bg-surface rounded-card shadow-card border border-black/[0.05] overflow-hidden"
+      >
+        <!-- Barra de acento superior -->
+        <div class="h-0.5 w-full bg-gradient-to-r from-primary via-primary-light to-accent"></div>
+        <div class="p-7 pt-6">
+          <app-login-form [loading]="authService.loading()" (emailSubmitted)="onLogin($event)" />
+        </div>
+      </div>
+
+      <!-- Divisor con texto -->
+      <div class="flex items-center gap-3" aria-hidden="true">
+        <div class="flex-1 h-px bg-black/[0.07]"></div>
+        <span class="text-xs text-on-surface-muted font-medium">o continúa con</span>
+        <div class="flex-1 h-px bg-black/[0.07]"></div>
+      </div>
+
+      <!-- Botón de cuenta nueva (acción secundaria) -->
+      <button
+        type="button"
+        class="w-full h-11 inline-flex items-center justify-center gap-2 rounded-pill border-[1.5px] border-[rgba(108,99,255,0.25)] bg-surface text-sm font-semibold text-primary cursor-pointer transition-all duration-200 hover:bg-[rgba(108,99,255,0.05)] hover:border-primary hover:shadow-[0_0_0_3px_rgba(108,99,255,0.08)] focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 active:bg-[rgba(108,99,255,0.1)]"
+        aria-label="Crear cuenta nueva"
+        (click)="openCreateUserDialog()"
+      >
+        <mat-icon class="!text-[18px] !w-[18px] !h-[18px]" aria-hidden="true">person_add</mat-icon>
+        Crear cuenta nueva
+      </button>
+
+      <!-- Nota de privacidad -->
+      <p class="text-xs text-on-surface-muted text-center m-0 leading-relaxed">
+        Al continuar, aceptas nuestros
+        <span class="text-primary font-medium cursor-pointer hover:underline"
+          >Términos de servicio</span
+        >
+        y
+        <span class="text-primary font-medium cursor-pointer hover:underline"
+          >Política de privacidad</span
+        >.
+      </p>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,62 @@
+name: Build, Test & Deploy
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production
+        run: npm run build
+
+      # ---------------------------------------------------------------
+      # E2E Tests (disabled by default)
+      # To enable, set the repository secret or variable RUN_E2E=true.
+      # NOTE: E2E tests require both the frontend AND backend running.
+      # Enable this only when a staging backend is available in CI.
+      # ---------------------------------------------------------------
+      - name: Install Playwright browsers
+        if: vars.RUN_E2E == 'true'
+        run: npx playwright install chromium --with-deps
+
+      - name: Start dev server and wait for it
+        if: vars.RUN_E2E == 'true'
+        run: |
+          npx ng serve &
+          timeout=60
+          while ! curl -s http://localhost:4200 > /dev/null 2>&1; do
+            timeout=$((timeout - 1))
+            if [ "$timeout" -le 0 ]; then
+              echo "Dev server did not start in time"
+              exit 1
+            fi
+            sleep 1
+          done
+          echo "Dev server is ready"
+
+      - name: Run E2E tests
+        if: vars.RUN_E2E == 'true'
+        run: npm run e2e
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          channelId: live
+          projectId: atom-todo-9da7d

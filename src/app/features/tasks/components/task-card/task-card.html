@@ -1,0 +1,76 @@
+<mat-card
+  class="group/card !rounded-xl !shadow-card !border !border-black/4 !transition-[box-shadow,transform,opacity] !duration-200 !ease-in-out overflow-hidden hover:!shadow-card-hover hover:!-translate-y-0.5"
+  [class.task-card--completed]="task().completed"
+>
+  <mat-card-content class="!flex items-start justify-between gap-4 !px-5 !py-[1.125rem]">
+    <div class="flex items-start gap-3.5 flex-1 min-w-0">
+      <!-- Checkbox to toggle completion -->
+      <div class="pt-0.5 shrink-0">
+        <mat-checkbox
+          [checked]="task().completed"
+          (change)="onToggle()"
+          [aria-label]="
+            (task().completed ? 'Marcar como pendiente: ' : 'Marcar como completada: ') +
+            task().title
+          "
+        >
+        </mat-checkbox>
+      </div>
+
+      <!-- Task info -->
+      <div class="flex-1 min-w-0">
+        <h3
+          class="text-[0.9375rem] font-semibold mb-1 text-on-surface break-words leading-[1.4]"
+          [class.line-through]="task().completed"
+          [class.!text-on-surface-secondary]="task().completed"
+        >
+          {{ task().title }}
+        </h3>
+
+        @if (task().description) {
+          <p
+            class="text-[0.8125rem] text-on-surface-secondary mb-2.5 break-words leading-normal line-clamp-2"
+          >
+            {{ task().description }}
+          </p>
+        }
+
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[0.6875rem] text-on-surface-muted">
+            {{ task().createdAt | date: 'd MMM y' : '' : 'es' }}
+          </span>
+
+          @if (task().priority) {
+            <mat-chip-set aria-label="Prioridad">
+              <mat-chip [class]="'task-card__priority--' + task().priority">
+                {{ priorityLabel() }}
+              </mat-chip>
+            </mat-chip-set>
+          }
+
+          @if (task().dueDate) {
+            <span
+              class="inline-flex items-center gap-0.5 px-2 py-0.5 bg-primary/[0.06] rounded-pill text-primary-dark text-[0.6875rem] font-medium"
+            >
+              Vence {{ task().dueDate | date: 'd MMM' : '' : 'es' }}
+            </span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Action buttons — visible on hover/focus -->
+    <div
+      class="task-card__actions flex flex-col gap-0.5 shrink-0 opacity-0 transition-opacity duration-150 ease-in-out group-hover/card:opacity-100 group-focus-within/card:opacity-100"
+      role="group"
+      [attr.aria-label]="'Acciones para: ' + task().title"
+    >
+      <button mat-icon-button aria-label="Editar tarea" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button aria-label="Eliminar tarea" (click)="onDelete()">
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

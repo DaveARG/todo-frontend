@@ -1,0 +1,324 @@
+<app-top-nav />
+<div class="flex-1 flex flex-col min-h-screen overflow-x-hidden ml-(--sidebar-width)">
+  <!-- Grid principal de dos columnas -->
+  <main class="py-7 px-8 flex-1 flex flex-col max-md:py-4 max-md:px-4">
+    <div
+      class="grid grid-cols-[65fr_35fr] grid-rows-[auto_1fr] gap-6 items-stretch flex-1 max-md:grid-cols-1 max-md:grid-rows-none"
+    >
+      <!-- ── Header fila: saludo + acciones (izq) | buscador + filtro (der) ── -->
+      <header class="flex items-center justify-between gap-4 flex-wrap max-md:order-0">
+        <!-- Zona de identidad: avatar + saludo -->
+        <div class="flex items-center gap-3.5 flex-1 min-w-0">
+          <div class="relative shrink-0">
+            <img
+              class="w-12 h-12 rounded-full object-cover ring-2 ring-primary/20 ring-offset-2 ring-offset-background"
+              ngSrc="atom.png"
+              width="48"
+              height="48"
+              alt=""
+              aria-hidden="true"
+            />
+            <!-- Indicador de estado activo -->
+            <span
+              class="absolute bottom-0 right-0 w-3 h-3 bg-accent rounded-full border-2 border-background"
+              aria-hidden="true"
+            ></span>
+          </div>
+
+          <div class="min-w-0">
+            <h1
+              class="text-[1.375rem] font-bold text-on-surface m-0 mb-0.5 leading-[1.3] whitespace-nowrap overflow-hidden text-ellipsis max-md:text-lg"
+            >
+              Hola, {{ userName() }} 👋
+            </h1>
+            <p
+              class="text-[0.8125rem] text-on-surface-secondary m-0 whitespace-nowrap max-[480px]:hidden"
+            >
+              ¡Bienvenido! Hagamos de hoy un día increíble.
+            </p>
+          </div>
+        </div>
+
+        <!-- Zona de acciones: logout + agregar -->
+        <div class="flex items-center gap-2.5 shrink-0">
+          <button
+            class="inline-flex items-center gap-1.5 py-2.5 px-5 bg-gradient-to-r from-primary to-primary-dark text-white border-none rounded-pill text-sm font-semibold cursor-pointer transition-all duration-200 min-h-[2.5rem] whitespace-nowrap shadow-[0_4px_14px_rgba(108,99,255,0.38)] hover:shadow-[0_6px_22px_rgba(108,99,255,0.52)] hover:-translate-y-px active:translate-y-0 active:shadow-[0_2px_8px_rgba(108,99,255,0.3)] focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px] max-[480px]:p-2.5 max-[480px]:w-11 max-[480px]:justify-center"
+            type="button"
+            (click)="openAddTaskDialog()"
+            aria-label="Agregar nueva tarea"
+          >
+            <mat-icon class="!text-[18px] !w-[18px] !h-[18px]" aria-hidden="true">add</mat-icon>
+            <span class="max-[480px]:hidden">Agregar tarea</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Buscador + filtro -->
+      <div
+        class="flex items-center gap-2.5 max-md:order-1"
+        role="search"
+        aria-label="Búsqueda y filtrado de tareas"
+      >
+        <div class="relative flex-1">
+          <label for="task-search" class="sr-only">Buscar tareas</label>
+          <input
+            id="task-search"
+            type="search"
+            class="w-full h-11 pr-11 pl-4.5 bg-surface border-[1.5px] border-[rgba(108,99,255,0.15)] rounded-pill text-sm text-on-surface outline-none transition-all duration-200 placeholder:text-on-surface-muted placeholder:text-sm hover:border-[rgba(108,99,255,0.35)] focus:border-primary focus:shadow-[0_0_0_3px_rgba(108,99,255,0.12)] [&::-webkit-search-cancel-button]:appearance-none"
+            placeholder="Buscar tareas..."
+            [value]="searchInputValue()"
+            (input)="onSearchInput($event)"
+            autocomplete="off"
+            aria-label="Buscar tareas por título o descripción"
+          />
+          <mat-icon
+            class="absolute right-3.5 top-1/2 -translate-y-1/2 !text-[18px] !w-[18px] !h-[18px] text-on-surface-muted pointer-events-none select-none"
+            aria-hidden="true"
+            >search</mat-icon
+          >
+        </div>
+        <!-- TaskFilterPanel replaces the static filter button.
+             The component manages its own overlay and badge internally. -->
+        <app-task-filters (filtersChange)="onFiltersChange($event)" />
+      </div>
+
+      <!-- ── Columna izquierda: stats + cards de visualización ── -->
+      <div class="flex flex-col gap-7 min-w-0 max-md:order-2">
+        <app-stats-cards />
+
+        <section
+          class="grid grid-cols-3 gap-4 flex-1 max-md:grid-cols-1"
+          aria-label="Visualizaciones de progreso"
+        >
+          <!-- Card: Resumen / Progress ring -->
+          <article
+            class="group bg-surface rounded-xl shadow-card border border-black/[0.04] p-6 flex flex-col gap-4 transition-all duration-250 hover:shadow-card-hover hover:-translate-y-1 relative overflow-hidden"
+          >
+            <!-- Acento de color superior -->
+            <div
+              class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-primary to-primary-light rounded-t-xl"
+              aria-hidden="true"
+            ></div>
+
+            <header class="flex items-start justify-between gap-2 pt-1">
+              <div>
+                <h2 class="text-[0.9375rem] font-bold text-on-surface m-0 leading-snug">Resumen</h2>
+                <p
+                  class="text-[0.75rem] text-on-surface-muted m-0 mt-0.5 uppercase tracking-wider font-medium"
+                >
+                  Progreso general
+                </p>
+              </div>
+              <span
+                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary/[0.08] shrink-0"
+                aria-hidden="true"
+              >
+                <mat-icon class="!text-[16px] !w-4 !h-4 text-primary">donut_large</mat-icon>
+              </span>
+            </header>
+
+            <div class="flex-1 flex flex-col items-center justify-center gap-3">
+              <app-task-progress-ring
+                [completed]="completedTasks()"
+                [total]="totalTasks()"
+              />
+              <div class="flex flex-col gap-1.5 self-stretch" aria-hidden="true">
+                <span class="flex items-center gap-2 text-xs font-medium text-on-surface-secondary">
+                  <span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
+                  Completadas ({{ completedTasks() }})
+                </span>
+                <span class="flex items-center gap-2 text-xs font-medium text-on-surface-secondary">
+                  <span
+                    class="w-2 h-2 rounded-full bg-[rgba(108,99,255,0.2)] border border-[rgba(108,99,255,0.35)] shrink-0"
+                  ></span>
+                  Pendientes ({{ pendingTasks() }})
+                </span>
+              </div>
+            </div>
+
+            <!-- Contenido decorativo adicional -->
+            <div
+              class="mt-auto pt-3 border-t border-black/[0.04] flex flex-col gap-2"
+              aria-hidden="true"
+            >
+              <div class="flex items-center gap-2">
+                <mat-icon class="!text-[14px] !w-3.5 !h-3.5 text-accent">tips_and_updates</mat-icon>
+                <p class="text-[0.6875rem] text-on-surface-muted m-0 leading-snug italic">
+                  @if (totalTasks() === 0) {
+                    Agrega tu primera tarea para comenzar a trackear tu progreso.
+                  } @else if (completedTasks() === totalTasks()) {
+                    ¡Excelente! Completaste todas tus tareas. Sigue así.
+                  } @else if (completedTasks() > 0) {
+                    Vas por buen camino. ¡Sigue avanzando!
+                  } @else {
+                    Completa tu primera tarea para ver el progreso.
+                  }
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card: Por vencer -->
+          <article
+            class="group bg-surface rounded-xl shadow-card border border-black/[0.04] p-6 flex flex-col gap-4 transition-all duration-250 hover:shadow-card-hover hover:-translate-y-1 relative overflow-hidden"
+          >
+            <!-- Acento de color superior (naranja/amber) -->
+            <div
+              class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#f4a261] to-[#e8820a] rounded-t-xl"
+              aria-hidden="true"
+            ></div>
+
+            <header class="flex items-start justify-between gap-2 pt-1">
+              <div>
+                <h2 class="text-[0.9375rem] font-bold text-on-surface m-0 leading-snug">
+                  Por vencer
+                </h2>
+                <p
+                  class="text-[0.75rem] text-on-surface-muted m-0 mt-0.5 uppercase tracking-wider font-medium"
+                >
+                  Fechas límite
+                </p>
+              </div>
+              <span
+                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[rgba(244,162,97,0.12)] shrink-0"
+                aria-hidden="true"
+              >
+                <mat-icon class="!text-[16px] !w-4 !h-4 text-[#f4a261]">schedule</mat-icon>
+              </span>
+            </header>
+
+            <div class="flex-1">
+              <app-upcoming-deadlines [tasks]="tasks()" />
+            </div>
+          </article>
+
+          <!-- Card: Más prioritarias -->
+          <article
+            class="group bg-surface rounded-xl shadow-card border border-black/[0.04] p-6 flex flex-col gap-4 transition-all duration-250 hover:shadow-card-hover hover:-translate-y-1 relative overflow-hidden"
+          >
+            <!-- Acento de color superior (rojo) -->
+            <div
+              class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#ef476f] to-[#c92d4d] rounded-t-xl"
+              aria-hidden="true"
+            ></div>
+
+            <header class="flex items-start justify-between gap-2 pt-1">
+              <div>
+                <h2 class="text-[0.9375rem] font-bold text-on-surface m-0 leading-snug">
+                  Más prioritarias
+                </h2>
+                <p
+                  class="text-[0.75rem] text-on-surface-muted m-0 mt-0.5 uppercase tracking-wider font-medium"
+                >
+                  Alta urgencia
+                </p>
+              </div>
+              <span
+                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[rgba(239,71,111,0.1)] shrink-0"
+                aria-hidden="true"
+              >
+                <mat-icon class="!text-[16px] !w-4 !h-4 text-[#ef476f]">priority_high</mat-icon>
+              </span>
+            </header>
+
+            <div class="flex-1">
+              <app-top-priority-tasks [tasks]="tasks()" />
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <!-- ── Columna derecha: lista de tareas ── -->
+      <div
+        class="flex flex-col gap-4 min-w-0 sticky top-6 max-h-[calc(100vh-3rem)] overflow-hidden max-md:static max-md:max-h-none max-md:overflow-visible max-md:order-3 row-span-1"
+      >
+        <section
+          class="flex flex-col gap-4 flex-1 min-h-0 overflow-hidden max-md:overflow-visible h-full"
+          aria-label="Lista de tareas"
+        >
+          <!-- Header de la sección de tareas -->
+          <div class="flex items-center justify-between gap-3 shrink-0 px-1">
+            <div class="flex items-center gap-2.5">
+              <!-- Acento vertical decorativo -->
+              <span
+                class="w-1 h-5 bg-gradient-to-b from-primary to-primary-dark rounded-full shrink-0"
+                aria-hidden="true"
+              ></span>
+              <h2 class="text-base font-bold text-on-surface m-0">
+                Tareas
+                @if (searchQuery()) {
+                  <span class="font-normal text-[0.8125rem] text-on-surface-secondary">
+                    — "{{ searchQuery() }}"</span
+                  >
+                }
+              </h2>
+              <!-- Pill shown when filter panel has active filters -->
+              @if (hasActiveFilters()) {
+                <span
+                  class="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary rounded-full text-[0.6875rem] font-semibold leading-none border border-primary/20"
+                  aria-label="Filtros activos"
+                >
+                  <mat-icon class="!text-[11px] !w-3 !h-3" aria-hidden="true">filter_list</mat-icon>
+                  Filtrado
+                </span>
+              }
+            </div>
+
+            <div class="flex items-center gap-2">
+              @if (completedTasks() > 0) {
+                <button
+                  class="inline-flex items-center gap-1 h-7 px-2.5 bg-transparent border border-error/20 rounded-lg text-[0.75rem] font-medium text-error/70 cursor-pointer transition-all duration-150 hover:bg-error/[0.07] hover:border-error/40 hover:text-error active:bg-error/[0.12] focus-visible:outline-2 focus-visible:outline-error focus-visible:outline-offset-2"
+                  type="button"
+                  aria-label="Eliminar todas las tareas completadas"
+                  title="Eliminar completadas"
+                  (click)="onDeleteCompleted()"
+                >
+                  <mat-icon class="!text-[14px] !w-3.5 !h-3.5" aria-hidden="true"
+                    >delete_sweep</mat-icon
+                  >
+                  <span class="max-[560px]:hidden">Eliminar completadas</span>
+                </button>
+              }
+
+              @if (totalTasks() > 0) {
+                <span
+                  class="inline-flex items-center justify-center min-w-[1.625rem] h-[1.625rem] px-2 bg-gradient-to-br from-primary to-primary-dark text-white rounded-pill text-xs font-bold shadow-[0_2px_6px_rgba(108,99,255,0.35)]"
+                  [attr.aria-label]="
+                    filteredTasks().length +
+                    ' tareas' +
+                    (searchQuery() ? ' encontradas' : ' en total')
+                  "
+                >
+                  {{ filteredTasks().length }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <div
+            class="tasks-list-scroll flex-1 overflow-y-auto pr-1 flex flex-col"
+            aria-live="polite"
+            aria-relevant="additions"
+          >
+            @if (loading()) {
+              <div class="flex justify-center items-center py-16">
+                <mat-spinner aria-label="Cargando tareas" />
+              </div>
+            } @else {
+              <app-task-list
+                [tasks]="filteredTasks()"
+                [loadingMore]="loadingMore()"
+                [hasMore]="hasMore()"
+                [hasFiltersActive]="hasActiveFilters() || !!searchQuery()"
+                (toggleTask)="onToggle($event)"
+                (editTask)="onEdit($event)"
+                (deleteTask)="onDelete($event)"
+                (loadMore)="loadMore()"
+              />
+            }
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,8 @@
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  overflow: hidden;
+}
+
+.mat-mdc-dialog-title.dialog-custom-title {
+  padding: 0 !important;
+  margin: 0 !important;
+}

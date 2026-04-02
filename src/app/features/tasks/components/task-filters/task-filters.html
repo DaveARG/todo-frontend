@@ -1,0 +1,202 @@
+<!-- Trigger button — hosts the CdkOverlayOrigin directive used as anchor point -->
+<div class="relative inline-flex">
+  <!--
+    Active-filters badge.
+    Shown only when at least one filter dimension is active.
+    aria-hidden because the trigger button already communicates state via
+    aria-label updates (handled by the parent label / tooltip).
+  -->
+  @if (activeCount() > 0) {
+    <span
+      class="absolute -top-1 -right-1 z-10 flex items-center justify-center min-w-[1.125rem] h-[1.125rem] px-1 bg-primary text-white rounded-full text-[0.625rem] font-bold leading-none shadow-[0_2px_6px_rgba(108,99,255,0.45)] pointer-events-none select-none"
+      aria-hidden="true"
+      >{{ activeCount() }}</span
+    >
+  }
+
+  <!--
+    Filter toggle button.
+    - cdkOverlayOrigin: marks this element as the anchor for the CDK overlay.
+    - #triggerBtn: local ref used by viewChild() in the TS class for focus restoration.
+    - Uses [class] binding (never ngClass) per project conventions.
+    - aria-expanded + aria-haspopup="dialog" communicate panel state to AT users.
+  -->
+  <button
+    #triggerBtn
+    cdkOverlayOrigin
+    type="button"
+    class="flex items-center justify-center w-11 h-11 bg-surface border-[1.5px] rounded-full cursor-pointer text-on-surface-secondary transition-all duration-150 shrink-0 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+    [class]="
+      isOpen()
+        ? 'border-primary text-primary bg-[rgba(108,99,255,0.06)] hover:bg-[rgba(108,99,255,0.10)] active:bg-[rgba(108,99,255,0.14)]'
+        : 'border-[rgba(108,99,255,0.15)] hover:bg-[rgba(108,99,255,0.06)] hover:border-primary hover:text-primary active:bg-[rgba(108,99,255,0.12)]'
+    "
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-label]="
+      activeCount() > 0 ? 'Filtrar tareas (' + activeCount() + ' activos)' : 'Filtrar tareas'
+    "
+    aria-haspopup="dialog"
+    title="Filtrar tareas"
+    (click)="togglePanel()"
+  >
+    <mat-icon class="!text-[18px] !w-[18px] !h-[18px]" aria-hidden="true">filter_list</mat-icon>
+  </button>
+</div>
+
+<!-- CDK Connected Overlay — the filter panel portal -->
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="triggerOrigin()"
+  [cdkConnectedOverlayOpen]="isOpen()"
+  [cdkConnectedOverlayPositions]="overlayPositions"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  [cdkConnectedOverlayViewportMargin]="8"
+  (backdropClick)="closePanel()"
+  (detach)="closePanel()"
+>
+  <!--
+    Filter panel.
+    - role="dialog" + aria-modal="true": treated as a modal dialog by AT.
+    - cdkTrapFocus + cdkTrapFocusAutoCapture: keyboard focus is trapped inside
+      while the panel is open, and auto-moved to the first focusable element.
+    - keydown.escape: standard keyboard escape pattern for dismissible panels.
+  -->
+  <div
+    role="dialog"
+    aria-modal="true"
+    aria-label="Panel de filtros de tareas"
+    cdkTrapFocus
+    cdkTrapFocusAutoCapture
+    class="mt-2 w-72 bg-surface rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.08)] border border-[rgba(108,99,255,0.12)] overflow-hidden animate-filter-panel"
+    (keydown.escape)="closePanel()"
+  >
+    <!-- ── Panel header ───────────────────────────────────────────────── -->
+    <header
+      class="flex items-center justify-between px-4 py-3 border-b border-[rgba(108,99,255,0.08)]"
+    >
+      <div class="flex items-center gap-2">
+        <mat-icon class="!text-[16px] !w-4 !h-4 text-primary" aria-hidden="true">tune</mat-icon>
+        <h2 class="text-sm font-bold text-on-surface m-0">Filtros</h2>
+      </div>
+      <button
+        type="button"
+        class="flex items-center justify-center w-7 h-7 rounded-lg text-on-surface-muted hover:bg-[rgba(108,99,255,0.08)] hover:text-primary active:bg-[rgba(108,99,255,0.14)] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-1"
+        aria-label="Cerrar panel de filtros"
+        (click)="closePanel()"
+      >
+        <mat-icon class="!text-[16px] !w-4 !h-4 cursor-pointer" aria-hidden="true">close</mat-icon>
+      </button>
+    </header>
+
+    <!-- ── Panel body ────────────────────────────────────────────────── -->
+    <div class="px-4 py-3 flex flex-col gap-4">
+      <!-- Section: Priority -->
+      <fieldset class="border-none p-0 m-0">
+        <legend
+          class="text-xs font-semibold text-on-surface-secondary uppercase tracking-wider mb-2.5"
+        >
+          Prioridad
+        </legend>
+        <div class="flex flex-col gap-0.5">
+          @for (opt of priorityOptions; track opt.value) {
+            <label
+              class="flex items-center gap-2.5 py-1.5 px-2.5 rounded-lg cursor-pointer transition-colors duration-150 hover:bg-[rgba(108,99,255,0.05)]"
+            >
+              <input
+                type="checkbox"
+                class="w-4 h-4 rounded border-[1.5px] border-[rgba(108,99,255,0.35)] accent-primary cursor-pointer"
+                [value]="opt.value"
+                [checked]="draft().priorities.includes(opt.value)"
+                (change)="togglePriority(opt.value)"
+              />
+              <span class="flex items-center gap-2 text-sm text-on-surface font-medium flex-1">
+                <!-- Priority colour dot -->
+                <span
+                  class="w-2 h-2 rounded-full shrink-0"
+                  [style.background-color]="opt.color"
+                  aria-hidden="true"
+                ></span>
+                {{ opt.label }}
+              </span>
+            </label>
+          }
+        </div>
+      </fieldset>
+
+      <!-- Visual divider -->
+      <div class="h-px bg-[rgba(108,99,255,0.08)]" role="separator" aria-hidden="true"></div>
+
+      <!-- Section: Due date range -->
+      <fieldset class="border-none p-0 m-0">
+        <legend
+          class="text-xs font-semibold text-on-surface-secondary uppercase tracking-wider mb-2.5"
+        >
+          Fecha de vencimiento
+        </legend>
+        <div class="flex flex-col gap-0.5">
+          @for (opt of dueDateOptions; track opt.value) {
+            <label
+              class="flex items-center gap-2.5 py-1.5 px-2.5 rounded-lg cursor-pointer transition-colors duration-150 hover:bg-[rgba(108,99,255,0.05)]"
+            >
+              <!--
+                Radio input: clicking an already-selected option clears it
+                (toggle behaviour implemented in setDueDateRange()).
+                Using click instead of change avoids the browser preventing
+                deselection of an already-checked radio.
+              -->
+              <input
+                type="radio"
+                name="due-date-filter"
+                class="w-4 h-4 accent-primary cursor-pointer"
+                [value]="opt.value"
+                [checked]="draft().dueDateRange === opt.value"
+                (click)="setDueDateRange(opt.value)"
+              />
+              <span class="flex items-center gap-2 text-sm text-on-surface font-medium flex-1">
+                <mat-icon
+                  class="!text-[14px] !w-3.5 !h-3.5 text-on-surface-secondary shrink-0"
+                  aria-hidden="true"
+                  >{{ opt.icon }}</mat-icon
+                >
+                {{ opt.label }}
+              </span>
+            </label>
+          }
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- ── Panel footer: actions ─────────────────────────────────────── -->
+    <footer
+      class="flex items-center justify-between gap-3 px-4 py-3 border-t border-[rgba(108,99,255,0.08)] bg-[rgba(108,99,255,0.02)]"
+    >
+      <!--
+        "Limpiar" button.
+        Disabled when draft has no active selections.
+        Uses error-toned hover to reinforce destructive action.
+      -->
+      <button
+        type="button"
+        class="inline-flex items-center gap-1.5 h-9 px-3.5 bg-transparent border border-[rgba(108,99,255,0.18)] rounded-lg text-[0.8125rem] font-medium text-on-surface-secondary cursor-pointer transition-all duration-150 hover:bg-[rgba(239,71,111,0.07)] hover:border-error/50 hover:text-error active:bg-[rgba(239,71,111,0.12)] focus-visible:outline-2 focus-visible:outline-error focus-visible:outline-offset-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none"
+        [disabled]="!hasDraftFilters()"
+        (click)="clearFilters()"
+        aria-label="Limpiar todos los filtros"
+      >
+        <mat-icon class="!text-[14px] !w-3.5 !h-3.5" aria-hidden="true">clear_all</mat-icon>
+        Limpiar
+      </button>
+
+      <!-- "Aplicar" button — commits draft and closes panel -->
+      <button
+        type="button"
+        class="inline-flex items-center gap-1.5 h-9 px-4 bg-gradient-to-r from-primary to-primary-dark text-white border-none rounded-lg text-[0.8125rem] font-semibold cursor-pointer transition-all duration-200 shadow-[0_3px_10px_rgba(108,99,255,0.3)] hover:shadow-[0_5px_16px_rgba(108,99,255,0.45)] hover:-translate-y-px active:translate-y-0 active:shadow-[0_2px_6px_rgba(108,99,255,0.25)] focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+        (click)="applyFilters()"
+        aria-label="Aplicar filtros seleccionados"
+      >
+        <mat-icon class="!text-[14px] !w-3.5 !h-3.5" aria-hidden="true">check</mat-icon>
+        Aplicar
+      </button>
+    </footer>
+  </div>
+</ng-template>

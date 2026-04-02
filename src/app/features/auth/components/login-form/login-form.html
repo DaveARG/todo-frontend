@@ -1,0 +1,150 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+  <!-- Campo de correo electrónico -->
+  <div class="flex flex-col gap-2">
+    <label
+      for="login-email"
+      class="text-sm font-semibold text-on-surface flex items-center gap-1.5"
+    >
+      <mat-icon class="!text-[14px] !w-[14px] !h-[14px] text-on-surface-muted" aria-hidden="true"
+        >alternate_email</mat-icon
+      >
+      Correo electrónico
+    </label>
+
+    <div class="relative">
+      <!-- Icono decorativo a la izquierda — cambia de color con foco -->
+      <mat-icon
+        class="absolute left-3.5 top-1/2 -translate-y-1/2 !text-[18px] !w-[18px] !h-[18px] pointer-events-none select-none transition-colors duration-200"
+        [class]="emailFocused() ? 'text-primary' : 'text-on-surface-muted'"
+        aria-hidden="true"
+      >
+        mail_outline
+      </mat-icon>
+
+      <input
+        id="login-email"
+        formControlName="email"
+        type="email"
+        autocomplete="email"
+        placeholder="tu@correo.com"
+        class="w-full h-12 pl-10 pr-4 rounded-xl text-sm text-on-surface outline-none transition-all duration-200 placeholder:text-on-surface-muted border-[1.5px]"
+        [class]="emailInputClasses()"
+        [attr.aria-invalid]="isEmailInvalid()"
+        [attr.aria-describedby]="isEmailInvalid() ? 'email-error' : null"
+        (focus)="emailFocused.set(true)"
+        (blur)="emailFocused.set(false)"
+      />
+    </div>
+
+    <!-- Mensaje de error accesible -->
+    @if (isEmailInvalid()) {
+      <div
+        id="email-error"
+        role="alert"
+        aria-live="polite"
+        class="flex items-center gap-1.5 text-xs text-error font-medium px-1"
+      >
+        <mat-icon class="!text-[14px] !w-[14px] !h-[14px] shrink-0" aria-hidden="true"
+          >error_outline</mat-icon
+        >
+        @if (form.controls.email.hasError('required')) {
+          <span>El correo electrónico es obligatorio</span>
+        } @else if (form.controls.email.hasError('email')) {
+          <span>Ingrese un correo electrónico válido</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Campo de contraseña -->
+  <div class="flex flex-col gap-2">
+    <label
+      for="login-password"
+      class="text-sm font-semibold text-on-surface flex items-center gap-1.5"
+    >
+      <mat-icon class="!text-[14px] !w-[14px] !h-[14px] text-on-surface-muted" aria-hidden="true"
+        >lock_outline</mat-icon
+      >
+      Contraseña
+    </label>
+
+    <div class="relative">
+      <!-- Icono decorativo a la izquierda -->
+      <mat-icon
+        class="absolute left-3.5 top-1/2 -translate-y-1/2 !text-[18px] !w-[18px] !h-[18px] pointer-events-none select-none transition-colors duration-200"
+        [class]="passwordFocused() ? 'text-primary' : 'text-on-surface-muted'"
+        aria-hidden="true"
+      >
+        lock_outline
+      </mat-icon>
+
+      <input
+        id="login-password"
+        formControlName="password"
+        [type]="passwordVisible() ? 'text' : 'password'"
+        autocomplete="current-password"
+        placeholder="Tu contraseña"
+        class="w-full h-12 pl-10 pr-12 rounded-xl text-sm text-on-surface outline-none transition-all duration-200 placeholder:text-on-surface-muted border-[1.5px]"
+        [class]="passwordInputClasses()"
+        [attr.aria-invalid]="isPasswordInvalid()"
+        [attr.aria-describedby]="isPasswordInvalid() ? 'password-error' : null"
+        (focus)="passwordFocused.set(true)"
+        (blur)="passwordFocused.set(false)"
+      />
+
+      <!-- Botón toggle visibilidad -->
+      <button
+        type="button"
+        class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-transparent border-none cursor-pointer text-on-surface-muted hover:text-primary hover:bg-primary/[0.06] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-1"
+        [attr.aria-label]="passwordVisible() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        (click)="togglePasswordVisibility()"
+      >
+        <mat-icon class="!text-[18px] !w-[18px] !h-[18px]" aria-hidden="true">
+          {{ passwordVisible() ? 'visibility_off' : 'visibility' }}
+        </mat-icon>
+      </button>
+    </div>
+
+    <!-- Mensaje de error accesible -->
+    @if (isPasswordInvalid()) {
+      <div
+        id="password-error"
+        role="alert"
+        aria-live="polite"
+        class="flex items-center gap-1.5 text-xs text-error font-medium px-1"
+      >
+        <mat-icon class="!text-[14px] !w-[14px] !h-[14px] shrink-0" aria-hidden="true"
+          >error_outline</mat-icon
+        >
+        @if (form.controls.password.hasError('required')) {
+          <span>La contraseña es requerida</span>
+        } @else if (form.controls.password.hasError('minlength')) {
+          <span>Mínimo 8 caracteres</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Botón de envío con gradiente — mismo estilo que main-page -->
+  <button
+    type="submit"
+    class="w-full h-12 mt-1 inline-flex items-center justify-center gap-2.5 rounded-pill text-sm font-semibold border-none transition-all duration-200 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px] bg-gradient-to-br from-[#6c63ff] to-[#4a44c6] text-white shadow-[0_4px_14px_rgba(108,99,255,0.4)] cursor-pointer hover:shadow-[0_6px_20px_rgba(108,99,255,0.5)] hover:-translate-y-px active:translate-y-0 active:shadow-[0_2px_8px_rgba(108,99,255,0.35)] disabled:from-[#c4c0ff] disabled:to-[#a8a3ff] disabled:text-white/60 disabled:cursor-not-allowed disabled:shadow-none disabled:translate-y-0"
+    [disabled]="form.invalid || loading()"
+    [attr.aria-busy]="loading()"
+  >
+    <span class="inline-flex items-center gap-2" aria-live="polite">
+      @if (loading()) {
+        <mat-spinner diameter="18" aria-label="Iniciando sesión" />
+        <span>Iniciando sesión...</span>
+      } @else {
+        <mat-icon class="!text-[18px] !w-[18px] !h-[18px]" aria-hidden="true">login</mat-icon>
+        <span>Iniciar sesión</span>
+      }
+    </span>
+  </button>
+
+  <!-- Ayuda debajo del botón -->
+  <p class="text-xs text-center text-on-surface-muted m-0 leading-relaxed">
+    ¿Primera vez aquí? Usa el botón de abajo<br />para crear tu cuenta.
+  </p>
+</form>

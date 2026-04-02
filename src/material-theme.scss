@@ -1,0 +1,127 @@
+@use '@angular/material' as mat;
+
+// === Angular Material Theme — Purple palette ===
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$violet-palette,
+        tertiary: mat.$cyan-palette
+      ),
+      typography: Roboto,
+      density: 0
+    )
+  );
+}
+
+// === Angular Material overrides — soften the default look ===
+
+// Cards — border radius + softer shadow
+.mat-mdc-card {
+  border-radius: var(--radius-card) !important;
+  box-shadow: var(--shadow-card) !important;
+  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+// Form fields — vivid, rounded, interactive
+.mat-mdc-form-field.mat-form-field-appearance-outline {
+  // Rounded outline segments
+  .mdc-notched-outline__leading {
+    border-radius: 0.75rem 0 0 0.75rem !important;
+  }
+  .mdc-notched-outline__trailing {
+    border-radius: 0 0.75rem 0.75rem 0 !important;
+  }
+
+  // Fix: floating label must not be clipped by prefix icon
+  .mat-mdc-floating-label {
+    overflow: visible !important;
+  }
+
+  // Wrapper: rounded + tinted background + transition
+  .mat-mdc-text-field-wrapper {
+    border-radius: 0.75rem;
+    background: rgba(108, 99, 255, 0.035);
+    transition:
+      box-shadow 0.2s ease,
+      background 0.2s ease,
+      transform 0.15s ease;
+  }
+
+  // Default border
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: rgba(108, 99, 255, 0.2) !important;
+    transition:
+      border-color 0.2s ease,
+      border-width 0.15s ease;
+  }
+
+  // Hover: stronger border + warmer bg
+  &:hover {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: rgba(108, 99, 255, 0.55) !important;
+    }
+    .mat-mdc-text-field-wrapper {
+      background: rgba(108, 99, 255, 0.06);
+    }
+  }
+
+  // Focus: vivid border + glow ring + bg lift
+  &.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: #6c63ff !important;
+      border-width: 2px !important;
+    }
+    .mat-mdc-text-field-wrapper {
+      box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.15);
+      background: rgba(108, 99, 255, 0.04);
+    }
+    // Prefix icon turns primary on focus
+    .mat-mdc-form-field-icon-prefix mat-icon {
+      color: #6c63ff !important;
+    }
+  }
+}
+
+// Buttons — rounded
+.mat-mdc-raised-button,
+.mat-mdc-flat-button,
+.mat-mdc-unelevated-button {
+  border-radius: var(--radius-pill) !important;
+}
+
+// Chips — pill shape
+.mdc-evolution-chip {
+  border-radius: var(--radius-pill) !important;
+}
+
+// Snackbar — rounded
+.mat-mdc-snack-bar-container {
+  border-radius: var(--radius-md) !important;
+}
+
+// Dialog — rounded
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  border-radius: var(--radius-xl) !important;
+}
+
+// Checkbox — primary color
+.mat-mdc-checkbox .mdc-checkbox__background {
+  border-color: rgba(108, 99, 255, 0.4) !important;
+}
+
+.mat-mdc-checkbox.mat-mdc-checkbox-checked .mdc-checkbox__background {
+  background-color: #6c63ff !important;
+  border-color: #6c63ff !important;
+}
+
+// Progress spinner
+.mat-mdc-progress-spinner circle {
+  stroke: #6c63ff !important;
+}
